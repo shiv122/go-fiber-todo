@@ -1,0 +1,9 @@
+root = "."
+tmp_dir = "tmp"
+build_cmd = "go build -o ./tmp/main ."
+binary = "./tmp/main"
+exclude_dir = ["tmp", "node_modules", "frontend"]
+delay = 1000
+log_color = true
+log_time = true
+log_verbose = true
