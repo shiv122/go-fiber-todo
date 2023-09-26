@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/shiv122/go-todo/config"
 	"github.com/shiv122/go-todo/connection"
-	"github.com/shiv122/go-todo/migration"
 	"github.com/shiv122/go-todo/routes"
 )
 
@@ -17,11 +16,9 @@ func main() {
 
 	connection.ConnectDB()
 
-	migration.Migrate()
-
 	routes.SetupApiRoute(app)
 
-	// log.Info(config.App)
+	// migration.Migrate()
 
 	app.Listen(":" + config.App.Port)
 }
