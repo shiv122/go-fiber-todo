@@ -13,7 +13,8 @@ type TodoController struct{}
 func (tc *TodoController) GetList(c *fiber.Ctx) error {
 	user := c.Locals("user").(map[string]interface{})
 	var todos []models.Todo
-	connection.DB.First(&todos, user["ID"])
+	connection.DB.Find(&todos, "`user_id` = ?", user["ID"])
+
 	return c.JSON(todos)
 
 }
@@ -41,4 +42,48 @@ func (tc *TodoController) StoreTodo(c *fiber.Ctx) error {
 		"status": "success",
 		"todo":   todo,
 	})
+}
+
+func (tc *TodoController) UpdateTodo(c *fiber.Ctx) error {
+	user := c.Locals("user").(map[string]interface{})
+	var todo models.Todo
+
+	connection.DB.Model(&todo).
+		Where("`user_id`=?", user["ID"]).
+		Where("id", c.FormValue("Id")).
+		Update("name", c.FormValue("Name")).
+		Update("description", c.FormValue("Description"))
+
+	return c.JSON(fiber.Map{
+		"message": "Todo Updated",
+		"status":  "success",
+	})
+
+}
+
+func (tc *TodoController) DeleteTodo(c *fiber.Ctx) error {
+	user := c.Locals("user").(map[string]interface{})
+	todo := models.Todo{}
+
+	connection.DB.Unscoped().
+		Where("`user_id`=?", user["ID"]).
+		Delete(&todo, c.Params("id"))
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Todo Deleted Successfully",
+	})
+}
+
+func (tc *TodoController) UpdateStatus(c *fiber.Ctx) error {
+	user := c.Locals("user").(map[string]interface{})
+	var todo models.Todo
+
+	connection.DB.Model(&todo).
+		Where("`user_id`=?", user["ID"]).
+		Where("id", c.FormValue("Id")).
+		Update("status", c.FormValue("Status"))
+
+	return c.JSON("success")
+
 }

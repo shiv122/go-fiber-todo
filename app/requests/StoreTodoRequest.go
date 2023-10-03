@@ -7,7 +7,7 @@ import (
 
 type StoreTodoRequest struct {
 	Name        string `form:"Name"  validate:"required,max=500"`
-	Description string `form:"Description"  validate:"required,max=10000"`
+	Description string `form:"Description"  validate:"max=10000"`
 }
 
 func (str *StoreTodoRequest) Validate(c *fiber.Ctx) error {

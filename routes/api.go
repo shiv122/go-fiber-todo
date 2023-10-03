@@ -35,6 +35,13 @@ func SetupApiRoute(app *fiber.App) {
 	todoRoute := usersRoute.Group("todos")
 
 	todoRoute.Get("/", todoController.GetList)
+
 	todoRoute.Post("create", new(requests.StoreTodoRequest).Validate, todoController.StoreTodo)
+
+	todoRoute.Post("/update", new(requests.UpdateTodoRequest).Validate, todoController.UpdateTodo)
+
+	todoRoute.Post("update-status", new(requests.StatusUpdateTodoRequest).Validate, todoController.UpdateStatus)
+
+	todoRoute.Delete("/:id/delete", todoController.DeleteTodo)
 
 }

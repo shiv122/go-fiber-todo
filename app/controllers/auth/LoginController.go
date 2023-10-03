@@ -18,12 +18,16 @@ func (lc *LoginController) Login(c *fiber.Ctx) error {
 
 	var user models.User
 
+	// return c.JSON(fiber.Map{
+	// 	"pass": c.FormValue("Password"),
+	// })
+
 	result := connection.DB.Where("email = ?", c.FormValue("Email")).First(&user)
 
 	if result.Error != nil {
 		return c.Status(fiber.StatusNotFound).
 			JSON(fiber.Map{
-				"error":   "404 not found",
+				"status":  "Not Found",
 				"message": result.Error.Error(),
 			})
 	}
@@ -33,7 +37,7 @@ func (lc *LoginController) Login(c *fiber.Ctx) error {
 	if !passwordMatched {
 		return c.Status(fiber.StatusUnauthorized).
 			JSON(fiber.Map{
-				"error":   "Unauthorized",
+				"status":  "Unauthorized",
 				"message": "Email or Password is incorrect",
 			})
 	}
@@ -55,8 +59,22 @@ func (lc *LoginController) Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
+	// c.Cookie(&fiber.Cookie{
+	// 	Name:     "auth",
+	// 	Value:    t,
+	// 	HTTPOnly: true,
+	// 	Secure:   true,
+	// })
+
 	return c.JSON(fiber.Map{
 		"status": "success",
 		"token":  t,
+		"user": fiber.Map{
+			"id":         user.ID,
+			"first_name": user.FirstName,
+			"last_name":  user.LastName,
+			"email":      user.Email,
+			"phone":      user.Phone,
+		},
 	})
 }
