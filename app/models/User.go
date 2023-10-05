@@ -10,7 +10,7 @@ type User struct {
 	LastName  string `gorm:"column:last_name;type:varchar(255);not null"`
 	Email     string `gorm:"unique;column:email;not null;type:varchar(500)"`
 	Phone     string `gorm:"column:phone;type:varchar(255)"`
-	Password  string `gorm:"not null;type:varchar(255)"`
+	Password  string `gorm:"not null;type:varchar(255)" json:"-"`
 	Todos     []Todo
 	gorm.Model
 }

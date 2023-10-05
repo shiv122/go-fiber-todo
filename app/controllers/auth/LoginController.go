@@ -25,10 +25,10 @@ func (lc *LoginController) Login(c *fiber.Ctx) error {
 	result := connection.DB.Where("email = ?", c.FormValue("Email")).First(&user)
 
 	if result.Error != nil {
-		return c.Status(fiber.StatusNotFound).
+		return c.Status(fiber.StatusUnauthorized).
 			JSON(fiber.Map{
-				"status":  "Not Found",
-				"message": result.Error.Error(),
+				"status":  "Unauthorized",
+				"message": "Email or Password is incorrect",
 			})
 	}
 

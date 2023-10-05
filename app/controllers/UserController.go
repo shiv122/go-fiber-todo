@@ -25,5 +25,13 @@ func (uc *UserController) GetUsers(c *fiber.Ctx) error {
 
 func (uc *UserController) GetProfile(c *fiber.Ctx) error {
 
-	return c.JSON(c.Locals("user"))
+	var user models.User
+	var count int64
+	tokenUser := c.Locals("user").(map[string]interface{})
+	connection.DB.Where("id = ?", tokenUser["ID"]).First(&user)
+	count = connection.DB.Model(&user).Association("Todos").Count()
+	return c.JSON(fiber.Map{
+		"User":      user,
+		"TodoCount": count,
+	})
 }

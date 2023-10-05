@@ -16,3 +16,13 @@ type Todo struct {
 	User        *User
 	gorm.Model
 }
+
+/*
+|======================================================================
+| Scopes
+|======================================================================
+*/
+
+func CompletedTodo(db *gorm.DB) *gorm.DB {
+	return db.Where("status = ?", "completed")
+}
